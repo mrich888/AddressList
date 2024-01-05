@@ -1,19 +1,21 @@
 #ifndef _ADDRESS_LIST_H_
 #define _ADDRESS_LIST_H_
 #define MAX_SIZE 100
-typedef struct Contact
-{
-    char name[20];
-    char phonenum[11];
-}Contact;
+#define NAME_SIZE 20
+#define PHONE_SIZE 20
+typedef struct TreeNode {
+    char name[NAME_SIZE];
+    char phone[PHONE_SIZE];
+    struct TreeNode* left;
+    struct TreeNode* right;
+} TreeNode;
+
 /*初始化*/
-int AddressListInit(Contact *member);
+int addressListInit(char *name, char *phone);
 /*增*/
-int AddressListAddMember(Contact *member, int numContact);
+int addressListAddMember(TreeNode* root, char *name, char *phone);
 /*删*/
-int AddressListDeleMember(Contact *member,int numContact);
-/*改*/
-int AddressListModifyMember(Contact *member, int numContact);
+int addressListDeleMember(TreeNode* root, char *name);
 /*查*/
-int AddressListGetMember(Contact *member, int numContact);
+int addressListGetMember(TreeNode* root, char* name);
 #endif
