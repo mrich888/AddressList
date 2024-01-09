@@ -2,92 +2,225 @@
 #include<stdlib.h>
 #include<string.h>
 #include"addressList.h"
-
 enum STATUS_CODE
 {
+    NOT_FIND,
     ON_SUCCESS,
-    MALLLOC_ERROR,
+    MALLOC_ERROR,
     NULL_PTR,
     INVALID_POS,
     INVALID_VAL,
 };
-
 /*************************静态函数声明*********************************/
-static contactNode * createContactsNewNode(char * name, char * phone, contactNode *parent);
+static contact * createNewContactNode(char name, int phoneNUmber, contact * pParent);
 static contact* findMin(contact* node);
-static int printContact(contact* contact); 
-static int inorderTraversal(contact* root) ;
+static int printFunc(contact * contact);  
+static int compareFunc(ELEMENTTYPE val1, ELEMENTTYPE val2);
 /*************************静态函数实现*********************************/
+
 /* 创建新结点 */
-static contactNode * createContactsNewNode(char * name, char * phone, contactNode *parent) 
+static contact * createNewContactNode(char name, int phoneNUmber, contact * pParent)
 {
-    contactNode * newNode = (contactNode *)malloc(sizeof(contactNode) * 1);
+    /* 静态函数不需要判空 */
+    /* 给新结点分配空间 */
+    contact * newNode = (contact *)malloc(sizeof(contact) * 1);
     if (newNode == NULL)
     {
-        return NULL;
+        return NULL_PTR;
     }
-    /* 清除脏数据 */
-    memset(newNode, 0, sizeof(contactNode) * 1);
-
-    /* 初始化根节点 */
+    /* 清楚脏数据 */
+    memset(newNode, 0, sizeof(contact) * 1);
+    /* 初始化结点 */
     newNode->name[NAME_SIZE] = 0;
-    newNode->phone[PHONE_SIZE] = 0;
+    newNode->phoneNUmber[PHONE_SIZE] = 0;
     newNode->left = NULL;
     newNode->right = NULL;
     newNode->parent = NULL;
-
     /* 赋值 */
-    newNode->name[NAME_SIZE] = name;
-    newNode->phone[PHONE_SIZE] = phone;
+    strncpy(newNode->name, name, sizeof(name) - 1);
+    strncpy(newNode->phoneNUmber, phoneNUmber, sizeof(phoneNUmber) - 1);
+    newNode->parent = pParent;
 
     return newNode;
 }
-// /* */
-// static contact* findMin(contact* node) 
-// {
-//     while (node->left != NULL) 
-//     {
-//         node = node->left;
-//     }
-//     return node;
-// }
-// /* 打印联系人 */
-// static int printContact(contact* contact) 
-// {
-//     printf("姓名：%s  电话：%s  \n", contact->name, contact->phone);
-// }
-// /* 遍历 */
-// static int inorderTraversal(contact* root) 
-// {
-//     if (root != NULL) 
-//     {
-//         inorderTraversal(root->left);
-//         printContact(root);
-//         inorderTraversal(root->right);
-//     }
-// }
+/* 打印 */
+static int printFunc(contact * contact) 
+{
+    printf("姓名：%s  电话：%s  \n", contact->name, contact->phoneNUmber);
+}
+/* 比较 */
+static int compareFunc(ELEMENTTYPE val1, ELEMENTTYPE val2)
+{
+    return (val1 - val2);
+}
+
+/* 通讯录的初始化 */
+int addressListInit(addressList ** pList, int (*printFunc)(ELEMENTTYPE val))
+{
+    /* 判空，树不能为空 */
+    addressList * list = (addressList *)malloc(sizeof(addressList) * 1);
+    if (list == NULL)
+    {
+        return MALLOC_ERROR;
+    }
+    /* 清楚脏数据 */
+    memset(list, 0, sizeof(addressList) * 1);
+    /* 初始化树 */
+    list->size = 0;
+    list->root = NULL;
+    list->printFunc = printFunc;
+    /* 初始化根结点 */
+    list->root = createNewBstNode(0, 0, NULL);
+    /* 根结点不能为空 */
+    if (list->root == NULL)  
+    {
+        return MALLOC_ERROR;
+    }
+    
+    *pList = list;
+    return ON_SUCCESS;
+}
+/* 新添联系人 */
+int addressListAddMember(addressList * pList, char *name, int *phoneNUmber)
+{
+    if (pList->size == 0)
+    {
+        /* 直接插入到根结点 */
+        strncpy(pList->root->name, name, sizeof(name) - 1);
+        strncpy(pList->root->phoneNUmber, phoneNUmber, sizeof(phoneNUmber) - 1);
+        /* 树的结点树++ */
+        (pList->size)++;
+        return ON_SUCCESS;
+    }
+    /* 如果不为空，封装结点 */
+    contact * newNode = createNewContactNode(name, phoneNUmber, newNode->parent);
+    contact * travleNode = pList->root;
+    /* 找位置：需要一个一个对比 */
+    /* todo....compareFunc */
+    while (travleNode != NULL)
+    {
+        /* 对比两个结点的值，左小右大 */
+        if (newNode->name[0] <= travleNode->name[0])
+        {
+            travleNode = travleNode->left;
+        }
+        else if (newNode->name[0] > travleNode->name[0])
+        {
+            travleNode = travleNode->right;
+        }
+    }
+       /* 找到位置开始插入 */
+    if (newNode->name[0] <= travleNode->name[0])
+    { 
+        newNode->parent = travleNode;
+        travleNode->left = newNode;
+    }
+    else if (newNode->name[0] > travleNode->name[0])
+    {
+        newNode->parent = travleNode;
+        travleNode->right = newNode;
+    }
+    /* 结点数增加 */
+    (pList->size)++;
+}
+/* 删除联系人 */
+int addressListDeleMember(addressList * pList, char *name);
+
+/* 比较函数 */
+static int compareFunc(const char * str1, const char * str2)
+{
+    while (*str1 != '\0' && *str2 != '\0') 
+    {
+        if (*str1 != *str2) 
+        {
+            return (*str1 - *str2);
+        }
+        str1++;
+        str2++;
+    }
+    return (*str1 - *str2);
+}
+
+
+/* 根据元素找到相应的结点 */
+static contact * baseListGetContact(addressList * pList, char *name)
+{
+    contact * travelContact = pList->root;
+
+    int cmp = 0;
+
+    while (travelContact != NULL)
+    {
+        /* 比较大小 */
+        cmp = compareFunc(name, travelContact->name);
+        if (cmp < 0)
+        {
+            travelContact = travelContact->left;
+        }
+        else if (cmp > 0)
+        {
+            travelContact = travelContact->right;
+        }
+        else
+        {
+            /* 找到了 */
+            return travelContact;
+        }
+        
+    }
+    return NULL;
+}
+
+/* 查找联系人 */
+int addressListGetMember(addressList * pList, char *name)
+{
+    return baseListGetContact(pList, name) == NULL ? 0 : 1;
+
+}
+/* 打印联系人列表 */
+int addressListForeachMenber(addressList * pList);
+
+#if 0
+/* 创建新结点 */
+static contact* createNode(char* name, char* phone) 
+{
+    contact* newNode = (contact*)malloc(sizeof(contact));
+    strcpy(newNode->name, name);
+    strcpy(newNode->phone, phone);
+    newNode->left = NULL;
+    newNode->right = NULL;
+    return newNode;
+}
+/* */
+static contact* findMin(contact* node) 
+{
+    while (node->left != NULL) 
+    {
+        node = node->left;
+    }
+    return node;
+}
+/* 打印联系人 */
+static int printContact(contact* contact) 
+{
+    printf("姓名：%s  电话：%s  \n", contact->name, contact->phone);
+}
+/* 遍历 */
+static int inorderTraversal(contact* root) 
+{
+    if (root != NULL) 
+    {
+        inorderTraversal(root->left);
+        printContact(root);
+        inorderTraversal(root->right);
+    }
+}
 /*************************以上为静态函数*******************************/
 /****************************API函数实现*******************************/
 /* 通讯录的初始化 */
-int addressListInit(ContactsTree **pContacts, int (*compareFunc)(ELEMENTTYPE val1, ELEMENTTYPE val2))
+int addressListInit(char *name, char *phone)
 {
-    int ret = 0;
-
-    ContactsTree * contactsT = (ContactsTree *)malloc(sizeof(ContactsTree) * 1);
-    if (pContacts == NULL)
-    {
-        return MALLLOC_ERROR;
-    }
-    /* 清除脏数据 */
-    memset(pContacts, 0, sizeof(ContactsTree) * 1);
-
-    /* 初始化通讯录的树 */
-    contactsT->root = NULL;
-    contactsT->size = 0;
-
-    /* 钩子函数在这里初始化 */
-    contactsT->compareFunc = compareFunc;
-
+    
 }
 
 /* 新添联系人 */ 
@@ -159,6 +292,7 @@ int addressListDeleMember(contact* root, char *name)
     }
     return root;
 }
+
 /* 查找联系人 */
 int addressListGetMember(contact* root, char* name)
 {
@@ -186,3 +320,4 @@ int addressListForeachMenber(contact* root)
 {
 
 }
+#endif

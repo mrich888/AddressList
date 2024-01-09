@@ -4,42 +4,36 @@
 #define MAX_SIZE 100
 #define NAME_SIZE 20
 #define PHONE_SIZE 20
-
-typedef void * ELEMENTTYPE;
+#define ELEMENTTYPE void *
 
 /* 联系人结构体 */
-typedef struct contactNode
+typedef struct contact
 {
     char name[NAME_SIZE]; //姓名 
-    char phone[PHONE_SIZE];//电话号码
+    char phoneNUmber[PHONE_SIZE];//电话号码
     struct contact* parent;//父结点
     struct contact* left;//左子树
     struct contact* right;//右子树
+} contact;
 
-} contactNode;
-
-/* 通讯录树的结构体 */
-typedef struct ContactsTree
+/* 通讯录结构体 */
+typedef struct addressList
 {
-    /* 根结点 */
-    contactNode * root;
-
     int size;
-    /* 比较器 */
-    int (*compareFunc)(ELEMENTTYPE val1, ELEMENTTYPE val2);
-} ContactsTree;
+    contact * root;
+    int(*printFunc)(ELEMENTTYPE val);
+}addressList;
 
 /* 通讯录的初始化 */
-int addressListInit(ContactsTree **pContacts, int (*compareFunc)(ELEMENTTYPE val1, ELEMENTTYPE val2));
-
+int addressListInit(addressList ** pList, int (*printFunc)(ELEMENTTYPE val));
 /* 新添联系人 */
-int addressListAddMember(contactNode* root, char *name, char *phone);
+int addressListAddMember(addressList * pList, char *name, int *phoneNUmber);
 /* 删除联系人 */
-int addressListDeleMember(contactNode* root, char *name);
+int addressListDeleMember(addressList * pList, char *name);
 /* 查找联系人 */
-int addressListGetMember(contactNode* root, char* name);
+int addressListGetMember(addressList * pList, char *name);
 /* 打印联系人列表 */
-int addressListForeachMenber(contactNode* root);
+int addressListForeachMenber(addressList * pList);
 
 
 #endif
