@@ -82,7 +82,7 @@ int addressListInit(addressList ** pList, int (*compareFunc)(ELEMENTTYPE val1, E
     return ON_SUCCESS;
 }
 /* 新添联系人 */
-int addressListAddMember(addressList * pList, char name, int phoneNUmber)
+int addressListAddMember(addressList * pList, char *name, int *phoneNUmber)
 {
     if (pList->size == 0)
     {

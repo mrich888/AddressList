@@ -21,18 +21,17 @@ typedef struct addressList
 {
     int size;
     contact * root;
-    int(*compareFunc)(ELEMENTTYPE val1, ELEMENTTYPE val2);
     int(*printFunc)(ELEMENTTYPE val);
 }addressList;
 
 /* 通讯录的初始化 */
-int addressListInit(addressList ** pList, int (*compareFunc)(ELEMENTTYPE val1, ELEMENTTYPE val2), int (*printFunc)(ELEMENTTYPE val));
+int addressListInit(addressList ** pList, int (*printFunc)(ELEMENTTYPE val));
 /* 新添联系人 */
-int addressListAddMember(addressList * pList, char name, int phoneNUmber);
+int addressListAddMember(addressList * pList, char *name, int *phoneNUmber);
 /* 删除联系人 */
-int addressListDeleMember(addressList * pList, ELEMENTTYPE * val);
+int addressListDeleMember(addressList * pList, char *name);
 /* 查找联系人 */
-int addressListGetMember(addressList * pList, ELEMENTTYPE * val);
+int addressListGetMember(addressList * pList, char *name);
 /* 打印联系人列表 */
 int addressListForeachMenber(addressList * pList);
 
