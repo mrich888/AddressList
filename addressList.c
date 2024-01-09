@@ -16,6 +16,8 @@ static contact * createNewContactNode(char name, int phoneNUmber, contact * pPar
 static contact* findMin(contact* node);
 static int printFunc(contact * contact);  
 static int compareFunc(ELEMENTTYPE val1, ELEMENTTYPE val2);
+static contact* minimum(contact* node);
+static int compareFunc(const char * str1, const char * str2);
 /*************************静态函数实现*********************************/
 
 /* 创建新结点 */
@@ -124,7 +126,67 @@ int addressListAddMember(addressList * pList, char *name, int *phoneNUmber)
     (pList->size)++;
 }
 /* 删除联系人 */
-int addressListDeleMember(addressList * pList, char *name);
+int addressListDeleMember(addressList * pList, ELEMENTTYPE * val)
+{
+    contact* current = pList->root;
+    while (current != NULL && pList->compareFunc(*val, current) != 0) {
+        if (pList->compareFunc(*val, current) < 0) {
+            current = current->left;
+        } else {
+            current = current->right;
+        }
+    }
+
+    if (current == NULL) {
+        return -1; // 联系人不存在
+    }
+
+    if (current->left == NULL) {
+        transplant(pList, current, current->right);
+    } else if (current->right == NULL) {
+        transplant(pList, current, current->left);
+    } else {
+        contact* successor = minimum(current->right);
+        if (successor->parent != current) {
+            transplant(pList, successor, successor->right);
+            successor->right = current->right;
+            successor->right->parent = successor;
+        }
+        transplant(pList, current, successor);
+        successor->left = current->left;
+        successor->left->parent = successor;
+    }
+
+    free(current);
+    pList->size--;
+
+    return 0;
+}
+
+/* 找到他的最小后继节点 */
+static contact* minimum(contact* node)
+{
+    while (node->left != NULL) {
+        node = node->left;
+    }
+    return node;
+}
+
+/* 辅助函数：替换节点 */
+void transplant(addressList* pList, contact* oldNode, contact* newNode)
+{
+    if (oldNode->parent == NULL) {
+        pList->root = newNode;
+    } else if (oldNode == oldNode->parent->left) {
+        oldNode->parent->left = newNode;
+    } else {
+        oldNode->parent->right = newNode;
+    }
+
+    if (newNode != NULL) {
+        newNode->parent = oldNode->parent;
+    }
+}
 
 /* 比较函数 */
 static int compareFunc(const char * str1, const char * str2)
@@ -178,7 +240,10 @@ int addressListGetMember(addressList * pList, char *name)
 
 }
 /* 打印联系人列表 */
-int addressListForeachMenber(addressList * pList);
+int addressListForeachMenber(addressList * pList)
+{
+    
+}
 
 #if 0
 /* 创建新结点 */

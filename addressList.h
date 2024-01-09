@@ -29,7 +29,7 @@ int addressListInit(addressList ** pList, int (*printFunc)(ELEMENTTYPE val));
 /* 新添联系人 */
 int addressListAddMember(addressList * pList, char *name, int *phoneNUmber);
 /* 删除联系人 */
-int addressListDeleMember(addressList * pList, char *name);
+int addressListDeleMember(addressList * pList, ELEMENTTYPE * val);
 /* 查找联系人 */
 int addressListGetMember(addressList * pList, char *name);
 /* 打印联系人列表 */
