@@ -15,7 +15,7 @@ enum STATUS_CODE
 static contact * createNewContactNode(char name, int phoneNUmber, contact * pParent);
 static contact* findMin(contact* node);
 static int printFunc(contact * contact);  
-static int compareFunc(ELEMENTTYPE val1, ELEMENTTYPE val2);
+
 /*************************静态函数实现*********************************/
 
 /* 创建新结点 */
@@ -48,14 +48,9 @@ static int printFunc(contact * contact)
 {
     printf("姓名：%s  电话：%s  \n", contact->name, contact->phoneNUmber);
 }
-/* 比较 */
-static int compareFunc(ELEMENTTYPE val1, ELEMENTTYPE val2)
-{
-    return (val1 - val2);
-}
 
 /* 通讯录的初始化 */
-int addressListInit(addressList ** pList, int (*compareFunc)(ELEMENTTYPE val1, ELEMENTTYPE val2), int (*printFunc)(ELEMENTTYPE val))
+int addressListInit(addressList ** pList, int (*printFunc)(ELEMENTTYPE val))
 {
     /* 判空，树不能为空 */
     addressList * list = (addressList *)malloc(sizeof(addressList) * 1);
@@ -68,7 +63,6 @@ int addressListInit(addressList ** pList, int (*compareFunc)(ELEMENTTYPE val1, E
     /* 初始化树 */
     list->size = 0;
     list->root = NULL;
-    list->compareFunc = compareFunc;
     list->printFunc = printFunc;
     /* 初始化根结点 */
     list->root = createNewBstNode(0, 0, NULL);
