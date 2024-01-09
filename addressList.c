@@ -13,7 +13,7 @@ enum STATUS_CODE
 };
 
 /*************************静态函数声明*********************************/
-static contact* createNode(char* name, char* phone);
+static contactNode * createContactsNewNode(char * name, char * phone, contactNode *parent);
 static contact* findMin(contact* node);
 static int printContact(contact* contact); 
 static int inorderTraversal(contact* root) ;
@@ -39,7 +39,7 @@ static contactNode * createContactsNewNode(char * name, char * phone, contactNod
     /* 赋值 */
     newNode->name[NAME_SIZE] = name;
     newNode->phone[PHONE_SIZE] = phone;
-    
+
     return newNode;
 }
 // /* */
