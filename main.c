@@ -1,12 +1,24 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
-#include"AddressList.h"
+//#include"AddressList.h"
+#include"addressList.h"
+
+int printFunc(contact * contact) 
+{
+    printf("姓名：%s  电话：%s  \n", contact->name, contact->phoneNUmber);
+}
+/* 比较 */
+int compareFunc(ELEMENTTYPE val1, ELEMENTTYPE val2)
+{
+    return (val1 - val2);
+}
 
 int main()
 {
-    TreeNode* root = NULL;
-
+    //TreeNode* root = NULL;
+    addressList * list;
+    addressListInit(&list, compareFunc, printFunc);
     while (1) 
     {
         printf("1. 添加联系人\n");
@@ -18,7 +30,81 @@ int main()
         printf("请选择操作："); 
         int choice;
         scanf("%d", &choice);
-
+        if (choice == 1) 
+        {
+            char name[NAME_SIZE], phoneNumber[PHONE_SIZE];
+            printf("请输入联系人姓名：");
+            scanf("%s", name);
+            printf("请输入联系人电话：");
+            scanf("%s", phoneNumber);
+            list = addressListAddMember(&list, &name, &phoneNumber);
+            printf("联系人已添加。\n");
+        } 
+        // else if (choice == 2) 
+        // {
+        //     char name[NAME_SIZE];
+        //     printf("请输入要删除的联系人姓名：");
+        //     scanf("%s", name);
+        //     root = addressListDeleMember(root, name);
+        //     printf("联系人已删除。\n");
+        // } 
+        // else if (choice == 3) 
+        // {
+        //     char name[NAME_SIZE], phone[PHONE_SIZE];
+        //     printf("请输入要修改的联系人姓名：");
+        //     scanf("%s", name);
+        //     TreeNode* contact = addressListGetMember(root, name);
+        //     if (contact == NULL) 
+        //     {
+        //         printf("联系人不存在。\n");
+        //     } 
+        //     else 
+        //     {
+        //         printf("请输入新的联系人电话：");
+        //         scanf("%s", phone);
+        //         strcpy(contact->phone, phone);
+        //         printf("联系人已修改。\n");
+        //     }
+        // } 
+        // else if (choice == 4) 
+        // {
+        //     char name[NAME_SIZE];
+        //     printf("请输入要查找的联系人姓名：");
+        //     scanf("%s", name);
+        //     TreeNode* contact = addressListGetMember(root, name);
+        //     if (contact == NULL) 
+        //     {
+        //         printf("联系人不存在。\n");
+        //     } 
+        //     else 
+        //     {
+        //         printf("联系人信息：\n");
+        //         printContact(contact);
+        //     }
+        // } 
+        else if (choice == 5)
+        {
+            if (list->root == NULL) 
+            {
+                printf("通讯录为空。\n");
+            } 
+            else 
+            {
+                printf("所有联系人信息：\n");
+                inorderTraversal(list->root);
+            }
+        } 
+        else if (choice == 6) 
+        {
+            printf("程序已退出。\n");
+            break;
+        } 
+        else 
+        {
+            printf("无效的选择，请重新输入。\n");
+        }
+    }
+#if 0
         if (choice == 1) 
         {
             char name[NAME_SIZE], phone[PHONE_SIZE];
@@ -93,7 +179,7 @@ int main()
             printf("无效的选择，请重新输入。\n");
         }
     }
-
+#endif
     return 0;
    
 }
