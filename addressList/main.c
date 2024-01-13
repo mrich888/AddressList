@@ -9,8 +9,8 @@ int compareFunc(void * arg1, void *arg2)
     contactPerson * person1 = ( contactPerson *)arg1;
     contactPerson * person2 = ( contactPerson *)arg2;
     /* 姓名和手机号都符合才符合 */
-    return strcmp(person1->name, person2->name) && (person1->phoneNumber - person2->phoneNumber);
-    /* && strcmp(person1->phoneNumber, person2->phoneNumber) */
+    return strcmp(person1->name, person2->name);
+    /* &&person1->phoneNumber - person2->phoneNumber) */
 }
 /* 输出格式 */
 int printFunc(void * arg)
@@ -30,11 +30,11 @@ int main()
     /* 菜单目录 */
     int choice = 0;
     menuChoice(&contacts);
+    printf("请输入你要选择的功能：\n");
+    scanf("%d\n", &choice);
+
     while (1)
     {
-        printf("请输入你要选择的功能：\n");
-        scanf("%d\n", &choice);
-
         switch (choice)
         {
         case INSERT:
@@ -43,11 +43,15 @@ int main()
             break;
         
         case SEARCH:
+            printf("请输入要查找的联系人姓名：\n");
+            scanf("%s", person.name);
             searchAppointPerson(&contacts, person);
             menuChoice(&contacts);
             break;
 
         case DELETE:
+            printf("请输入要删除的联系人姓名：\n");
+            scanf("%s", person.name);
             deleteAppointPerson(&contacts, person);
             menuChoice(&contacts);
         break;
