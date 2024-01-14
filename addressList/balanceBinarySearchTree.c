@@ -21,7 +21,7 @@ enum STATUS_CODE
 /* 创建结点 */
 static AVLTreeNode *createAVLTreeNewNode(ELEMENTTYPE val, AVLTreeNode *parent);
 /* 根据指定的值获取二叉搜索树的结点 */
-//static AVLTreeNode * baseAppointValGetAVLTreeNode(BalanceBinarySearchTree *pBstree, ELEMENTTYPE val);
+AVLTreeNode * baseAppointValGetAVLTreeNode(BalanceBinarySearchTree *pBstree, ELEMENTTYPE val);
 /* 判断二叉搜索树度为2 */
 static int balanceBinarySearchTreeNodeHasTwochildrens(AVLTreeNode *node);
 /* 判断二叉搜索树度为1 */

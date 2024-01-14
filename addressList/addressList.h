@@ -37,9 +37,9 @@ int menuChoice(addressList *pAddressList);
 /* 插入联系人 */
 int insertContact(addressList *pAddressList);
 /* 查找联系人 */
-int searchAppointPerson(addressList *pAddressList, contactPerson person);
+int searchAppointPerson(addressList *pAddressList);
 /* 删除联系人*/
-int deleteAppointPerson(addressList *pAddressList, contactPerson person);
+int deleteAppointPerson(addressList *pAddressList);
 /* 打印联系人菜单 */
 int printContactMenu(addressList *pAddressList);
 /* 返回菜单 */

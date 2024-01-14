@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 /* 比较器 */
 int compareFunc(void * arg1, void *arg2)
@@ -29,42 +30,34 @@ int main()
     contactPerson person;
     /* 菜单目录 */
     int choice = 0;
-    menuChoice(&contacts);
-    printf("请输入你要选择的功能：\n");
-    scanf("%d\n", &choice);
+    
 
     while (1)
     {
+        menuChoice(&contacts);
+
+        printf("请输入你要选择的功能：\n");
+        scanf("%d", &choice);   
         switch (choice)
         {
         case INSERT:
             insertContact(&contacts);
-            menuChoice(&contacts);
             break;
-        
         case SEARCH:
-            printf("请输入要查找的联系人姓名：\n");
-            scanf("%s", person.name);
-            searchAppointPerson(&contacts, person);
-            menuChoice(&contacts);
+            searchAppointPerson(&contacts);
             break;
-
         case DELETE:
-            printf("请输入要删除的联系人姓名：\n");
-            scanf("%s", person.name);
-            deleteAppointPerson(&contacts, person);
-            menuChoice(&contacts);
-        break;
-
+            deleteAppointPerson(&contacts);
+            break;
         case LIST:
             printContactMenu(&contacts);
-            menuChoice(&contacts);
-        break;
-
+            break;
         default:
             printf("请输出正确的选项！\n");
             break;
         }
+        sleep(3);
+        system("clear");
     }
     return 0;
 }
